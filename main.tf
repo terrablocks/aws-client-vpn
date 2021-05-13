@@ -1,13 +1,19 @@
 resource "random_pet" "vpn" {}
 
 locals {
-  vpn_name = var.name == "" ? random_pet.vpn.id : var.name
+  vpn_name = var.name == null ? random_pet.vpn.id : var.name
+}
+
+data "aws_kms_key" "vpn" {
+  key_id = var.logs_kms_key
 }
 
 resource "aws_cloudwatch_log_group" "vpn" {
-  count = var.enable_cw_logging && var.cw_log_group_name == "" ? 1 : 0
-  name  = "${local.vpn_name}-client-vpn-logs"
-  tags  = var.tags
+  count             = var.enable_cw_logging && var.cw_log_group_name == "" ? 1 : 0
+  name              = "${local.vpn_name}-client-vpn-logs"
+  kms_key_id        = data.aws_kms_key.vpn.arn
+  retention_in_days = var.logs_retention_days
+  tags              = var.tags
 }
 
 resource "aws_ec2_client_vpn_endpoint" "vpn" {
@@ -45,7 +51,8 @@ resource "aws_ec2_client_vpn_endpoint" "vpn" {
 }
 
 resource "aws_security_group" "vpn" {
-  count = length(var.security_group_ids) == 0 ? 1 : 0
+  # checkov:skip=CKV2_AWS_5: Assocaited to Client VPN if user does not provide custom security group
+  count       = length(var.security_group_ids) == 0 ? 1 : 0
   name        = "${local.vpn_name}-vpn-sg"
   description = "Security group for ${local.vpn_name} client vpn"
 
@@ -75,7 +82,7 @@ resource "aws_ec2_client_vpn_network_association" "vpn" {
   count                  = length(var.subnet_ids)
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.vpn.id
   subnet_id              = var.subnet_ids[count.index]
-  security_groups        = length(var.security_group_ids) == 0 ? [aws_security_group.vpn.id] : var.security_group_ids
+  security_groups        = length(var.security_group_ids) == 0 ? aws_security_group.vpn.*.id : var.security_group_ids
 }
 
 data "aws_subnet" "vpn" {
