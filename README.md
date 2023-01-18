@@ -1,6 +1,6 @@
 # Create an AWS managed Client VPN
 
-![License](https://img.shields.io/github/license/terrablocks/aws-client-vpn?style=for-the-badge) ![Tests](https://img.shields.io/github/workflow/status/terrablocks/aws-client-vpn/tests/master?label=Test&style=for-the-badge) ![Checkov](https://img.shields.io/github/workflow/status/terrablocks/aws-client-vpn/checkov/master?label=Checkov&style=for-the-badge) ![Commit](https://img.shields.io/github/last-commit/terrablocks/aws-client-vpn?style=for-the-badge) ![Release](https://img.shields.io/github/v/release/terrablocks/aws-client-vpn?style=for-the-badge)
+![License](https://img.shields.io/github/license/terrablocks/aws-client-vpn?style=for-the-badge) ![Tests](https://img.shields.io/github/actions/workflow/status/terrablocks/aws-client-vpn/tests.yml?branch=main&label=Test&style=for-the-badge) ![Checkov](https://img.shields.io/github/actions/workflow/status/terrablocks/aws-client-vpn/checkov.yml?branch=main&label=Checkov&style=for-the-badge) ![Commit](https://img.shields.io/github/last-commit/terrablocks/aws-client-vpn?style=for-the-badge) ![Release](https://img.shields.io/github/v/release/terrablocks/aws-client-vpn?style=for-the-badge)
 
 This terraform module will deploy the following services:
 - Client VPN
